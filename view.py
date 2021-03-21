@@ -11,7 +11,6 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # インスタンスを生成
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
 server = app.server
 
 # DBからデータを取得
@@ -27,8 +26,63 @@ for _data in data:
     real_prices.append(_data.real_price)
     pred_prices.append(_data.pred_price)
 
+# トップのコンポーネントを作成
+top = html.H2(
+    children='ビットコインの相場予測 （ BTC / JPY ）',
+    style={
+        'textAlign':'center',
+        'margin':'3%'
+    }
+)
+
+# 相場表示のstyleを作成
+div_style = {
+    'width':'40%',
+    'margin':'3%',
+    'display':'inline-block',
+    'textAlign':'center',
+    'backgroundColor':'#DDFFFF'
+}
+
+# 実際相場を表示するコンポーネントを作成
+real_price = html.Div(
+    children=[
+        html.H4(
+            children='実際の今日の相場：￥%s'%real_prices[-2]
+        ),
+        html.H4(
+            children='＊%s の相場'%dates[-2].strftime('%Y-%m-%d  %H:%M')
+        )
+    ],
+    style=div_style
+)
+
+# 予測相場を表示するコンポーネントを作成
+pred_price = html.Div(
+    children=[
+        html.H4(
+            children='予測した明日の相場：￥%s'%pred_prices[-1]   
+        ),
+        html.H4(
+            children='＊%s の相場'%dates[-1].strftime('%Y-%m-%d  %H:%M')
+        )
+    ],
+    style=div_style
+)
+
+# 相場表示のコンポーネントを作成
+view_price = html.Div(
+    children = [
+        real_price,
+        pred_price
+    ],
+    style = {
+        'textAlign':'center'
+    }
+)
+
 # グラフのレイアウトを作成
-layout = go.Layout(
+layout_graph = go.Layout(
     height=600,
     xaxis={
         "title":{
@@ -49,7 +103,7 @@ layout = go.Layout(
             "text":"相場（ビットコイン対日本円）"
         }
     },
-    margin=dict(l=300, r=300, t=50, b=100)
+    margin=dict(l=300, r=300, t=100, b=50)
 )
 
 # 予測相場グラフの作成
@@ -68,8 +122,8 @@ real_graph = go.Scatter(
 
 # グラフとレイアウトの登録
 fig = go.Figure(
-    data=[real_graph, pred_graph],
-    layout=layout
+    data=[real_graph,pred_graph],
+    layout=layout_graph
 )
 
 # グラフのコンポーネントを作成
@@ -81,58 +135,70 @@ graph = html.Div(
     ]
 )
 
-# トップのコンポーネントを作成
-top = html.H2(
-    children='ビットコインの相場予測', 
+# LINE公式アカウントの説明を載せるコンポーネントを作成
+line_top = html.H5(
+    children = 'こちらのLINE公式アカウントを追加すると、毎日ビットコインの相場予測結果を通知してくれます！',
     style={
-        'textAlign':'center'
+        'textAlign':'center',
+        'margin':'2%'
     }
 )
 
-# 相場表示のstyleを作成
-div_style = {
-    'width':'40%',
-    'margin':'5%',
+style_line = {
+    'width':'35%',
     'display':'inline-block',
     'textAlign':'center',
-    'backgroundColor':'#DDFFFF'
+    'verticalAlign':'middle'
 }
 
-# 実際相場を表示するコンポーネントを作成
-real_price = html.Div(
+# LINE公式アカウントのQRコードを載せるコンポーネントを作成
+info_qr = html.Div(
     children=[
-        html.H4(
-            children='実際の今日の相場：￥%s'%real_prices[-2]
+        html.Img(
+            src = 'assets/line_qr.png'
         ),
-        html.H4(
-            children=dates[-2]
-        )
     ],
-    style=div_style
+    style=style_line
 )
 
-# 予測相場を表示するコンポーネントを作成
-pred_price = html.Div(
+# LINE公式アカウントのリンクを載せるコンポーネントを作成
+info_url = html.Div(
     children=[
-        html.H4(
-            children='予測した明日の相場：￥%s'%pred_prices[-1]   
-        ),
-        html.H4(
-            children=dates[-1]
+        html.A(
+            children = "こちらをクリックすると友達追加できます！",
+            href = 'https://lin.ee/4Kdebvv',
+            target = "_blank",
+            style = {
+                'fontSize':'15pt',
+                'fontWeight':'bold'
+            }
         )
     ],
-    style=div_style
+    style=style_line
 )
 
-# 相場表示のコンポーネントを作成
-view_price = html.Div([real_price,pred_price])
+# アカウントのQRとリンクのコンポーネントをまとめる
+line_account = html.Div([info_qr, info_url])
+
+# LINEの情報をまとめる
+line_info = html.Div(
+    children=[
+        line_top,
+        line_account
+    ],
+    style = {
+        'textAlign':'center',
+        'margin':'5%'
+    }
+)
 
 # レイアウトの作成
 app.layout = html.Div(
     children=[
         top,
         view_price,
-        graph
+        graph,
+        line_info
     ]
 )
 
