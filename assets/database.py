@@ -34,8 +34,8 @@ def init_db():
     from assets import models
     Base.metadata.create_all(bind=engine)
 
-# 過去情報をDBに格納する関数を作成
-def read_data():
+# 過去情報をDBに格納する関数を作成（初回のみ実行）
+def write_data():
     from assets import models
 
     # 2019/02/01～の情報を取得（UTCとの時差は9時間）（close_timeは日本時間で午前9時）
@@ -97,4 +97,33 @@ def read_data():
         row = models.Data(date = _past_df['date'], real_price = _past_df['real'], pred_price = _past_df['pred'])
         db_session.add(row)
 
+    db_session.commit()
+
+    # デプロイした日の翌日の相場を予測し、DBに格納するコードを記述
+    # windowを作成し標準化
+    window = 5
+    data_five = db_session.query(models.Data).all()[-window:]
+    input_will = []
+
+    for price in data_five:
+        input_will.append(price.real_price)
+
+    input_will = np.array(input_will).reshape(1, window, 1)
+    input_mean = np.mean(input_will)
+    input_std = np.std(input_will)
+    sta_input = (input_will - input_mean) / input_std
+
+    # 翌日の価格を予測、標準化してあるので元に戻す
+    future_price = model.predict(sta_input)
+    future_price = future_price.reshape(-1)
+    future_price = future_price*input_std + input_mean
+    future_price = float(future_price)
+
+    # 翌日の日付を取得
+    today = db_session.query(models.Data).all()[-1].date
+    next_day = today + datetime.timedelta(days=1)
+
+    # 翌日の日付、予測した価格をデータベースに格納
+    row = models.Data(date = next_day, real_price = None, pred_price = future_price)
+    db_session.add(row)
     db_session.commit()

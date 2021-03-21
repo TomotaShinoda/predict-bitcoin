@@ -1,5 +1,6 @@
 from assets.database import db_session
 from assets.models import Data
+import line
 
 from keras.models import Sequential
 import numpy as np
@@ -37,6 +38,7 @@ def predict_nextday():
     input_std = np.std(input_will)
     sta_input = (input_will - input_mean) / input_std
 
+
     # 学習済みモデルを取得
     with open("lstm_model.pickle", "rb") as f:
         model = pickle.load(f)
@@ -56,6 +58,7 @@ def predict_nextday():
     db_session.add(row)
     db_session.commit()
 
-# アプリケーションを起動
+
+# メインで実行される関数
 if __name__ == "__main__":
     predict_nextday()
