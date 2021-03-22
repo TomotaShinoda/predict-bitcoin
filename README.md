@@ -46,8 +46,9 @@ https://lin.ee/4Kdebvv
 
 ・Coincheck API  
 ・Cryptowatch API  
+・LINE Messaging API
 
-・Heroku
+・Heroku（デプロイ）
 
 ＊ローカルで開発をしている際はAnacondaの仮想環境で開発をしておりました。  
   
