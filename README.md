@@ -68,4 +68,4 @@ https://lin.ee/4Kdebvv
 ・[LINE Messaging API Documentation](https://developers.line.biz/ja/docs/messaging-api/)  
 ・[Heroku Documentation](https://devcenter.heroku.com/categories/reference)  
 ・[Coincheck API Documentation](https://coincheck.com/ja/documents/exchange/api)  
-・[HTMLクイックリファレンス](http://www.htmq.com/)
+・[HTMLクイックリファレンス](http://www.htmq.com/){:target="_blank"}  
