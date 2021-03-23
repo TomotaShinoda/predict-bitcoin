@@ -68,4 +68,6 @@ https://lin.ee/4Kdebvv
 ・[LINE Messaging API Documentation](https://developers.line.biz/ja/docs/messaging-api/)  
 ・[Heroku Documentation](https://devcenter.heroku.com/categories/reference)  
 ・[Coincheck API Documentation](https://coincheck.com/ja/documents/exchange/api)  
-・[HTMLクイックリファレンス](http://www.htmq.com/){:target="_blank"}  
+・[Cryptowatch API で過去の相場データを取得](http://liibercraft.com/archives/30)  
+・[HTMLクイックリファレンス](http://www.htmq.com/)  
+・[Python インタラクティブ・データビジュアライゼーション 入門](https://www.asakura.co.jp/books/isbn/978-4-254-12258-9/)
